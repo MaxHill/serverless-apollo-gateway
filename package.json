@@ -1,0 +1,48 @@
+{
+  "babel": {
+    "presets": [
+      "@babel/preset-typescript"
+    ]
+  },
+  "scripts": {
+    "build-graph": "rover-layer supergraph compose --config layers/rover/supergraph-config.yaml > ./src/__generated__/supergraph.txt",
+    "lint-fix": "eslint '*/**/*.{js,ts,tsx}' --quiet --fix",
+    "postinstall": "node download-rover.js && cd ./layers/rover/ && tar -xvf ./rover.tar.gz"
+  },
+  "devDependencies": {
+    "@babel/preset-typescript": "^7.16.0",
+    "@types/aws-lambda": "^8.10.86",
+    "@types/jest": "^27.0.3",
+    "@typescript-eslint/eslint-plugin": "^5.5.0",
+    "@typescript-eslint/parser": "^5.5.0",
+    "aws-sdk-mock": "^5.5.0",
+    "esbuild": "^0.14.3",
+    "esbuild-jest": "^0.5.0",
+    "eslint": "^8.3.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "follow-redirects": "^1.14.6",
+    "graphql-tag": "^2.12.6",
+    "jest": "^27.4.4",
+    "lambda-tester": "^4.0.1",
+    "prettier": "^2.5.0",
+    "raw-loader": "^4.0.2",
+    "serverless": "^2.67.0",
+    "serverless-esbuild": "^1.23.1",
+    "serverless-iam-roles-per-function": "^3.2.0",
+    "serverless-offline": "^8.3.1",
+    "serverless-plugin-scripts": "^1.0.2",
+    "ts-jest": "^27.0.7",
+    "ts-loader": "^9.2.6",
+    "typescript": "^4.5.2"
+  },
+  "dependencies": {
+    "@apollo/gateway": "^0.44.1",
+    "@apollo/rover": "^0.4.1",
+    "@apollo/subgraph": "^0.1.5",
+    "@types/lambda-tester": "^3.6.1",
+    "apollo-server-lambda": "^3.5.0",
+    "aws-sdk": "^2.1043.0",
+    "graphql": "^15.0.0"
+  }
+}

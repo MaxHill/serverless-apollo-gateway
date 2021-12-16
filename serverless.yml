@@ -1,0 +1,94 @@
+service: feature-flag
+
+provider:
+  name: aws
+  region: eu-north-1
+  runtime: nodejs14.x
+  profile: 'feature-flags'
+  lambdaHashingVersion: "20201221"
+  environment: ${file(env.yml):${self:custom.stage}}
+
+plugins:
+  - serverless-iam-roles-per-function
+  - serverless-esbuild
+  - serverless-offline
+  - serverless-plugin-scripts
+
+package:
+  individually: true
+
+custom:
+  stage: "${opt:stage, self:provider.stage}"
+  scripts:
+    hooks:
+      'deploy:finalize': sls invoke -f buildSchema -s ${self:custom.stage}
+  esbuild:
+    loader:
+      .yml: text
+      .yaml: text
+  s3Buckets:
+    supergraph:
+      name: ${self:service}-${self:custom.stage}-supergraph
+      arn:
+        Fn::Join: ['', [
+            Fn::GetAtt: [supergraphBucket,Arn],
+            '/*'
+        ]]
+
+functions:
+  gateway:
+    handler: src/functions/gateway.handler
+    events:
+      - http:
+          path: /graphql
+          method: post
+          cors: true
+      - http:
+          path: /graphql
+          method: get
+          cors: true
+    iamRoleStatementsName: '${self:service}-role-gateway'
+    iamRoleStatements:
+      - Effect: 'Allow'
+        Action: s3:GetObject
+        Resource: ${self:custom.s3Buckets.supergraph.arn}
+
+  hello:
+    handler: src/functions/hello.handler
+    events:
+      - http:
+          path: hello
+          method: post
+          cors: true
+      - http:
+          path: hello
+          method: get
+          cors: true
+
+  buildSchema:
+    handler: src/functions/buildSchema.handler
+    layers:
+      - { Ref: RoverLambdaLayer }
+    events:
+      - http:
+          path: build-schema
+          method: get
+          cors: true
+    iamRoleStatementsName: '${self:service}-role-buildSchema'
+    iamRoleStatements:
+      - Effect: 'Allow'
+        Action: s3:PutObject
+        Resource: ${self:custom.s3Buckets.supergraph.arn}
+
+resources:
+  Resources:
+    supergraphBucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: ${self:custom.s3Buckets.supergraph.name}
+
+layers:
+  rover:
+    path: layers/rover # required, path to layer contents on disk
+    name: ${self:custom.stage}-rover-layer
+    description: Include rover-layer
