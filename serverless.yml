@@ -80,15 +80,15 @@ functions:
         Action: s3:PutObject
         Resource: ${self:custom.s3Buckets.supergraph.arn}
 
+layers:
+  rover:
+    path: layers/rover # required, path to layer contents on disk
+    name: ${self:custom.stage}-rover-layer
+    description: Include rover-layer
+
 resources:
   Resources:
     supergraphBucket:
       Type: AWS::S3::Bucket
       Properties:
         BucketName: ${self:custom.s3Buckets.supergraph.name}
-
-layers:
-  rover:
-    path: layers/rover # required, path to layer contents on disk
-    name: ${self:custom.stage}-rover-layer
-    description: Include rover-layer
