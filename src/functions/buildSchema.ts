@@ -4,6 +4,7 @@ import {
   generateSuperGraph as GenerateSuperGraph,
   saveSuperGraphToS3 as SaveSuperGraphToS3
 } from '../apollo';
+import { CognitoIdentityCredentials } from 'aws-sdk';
 
 export const createHandler =
   (
@@ -13,6 +14,11 @@ export const createHandler =
   ) =>
   async () => {
     try {
+      const identity = new CognitoIdentityCredentials({
+        IdentityPoolId: 'eu-north-1:fc7a6260-4900-4fbd-8cfe-efd9dc89970f'
+      });
+      console.log(identity);
+
       const supergraph = await generateSuperGraph(supergraphConfig);
       await saveSuperGraphToS3(supergraph, s3());
 

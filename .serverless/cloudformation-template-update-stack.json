@@ -74,19 +74,19 @@
     "GatewayLogGroup": {
       "Type": "AWS::Logs::LogGroup",
       "Properties": {
-        "LogGroupName": "/aws/lambda/feature-flag-prod-gateway"
+        "LogGroupName": "/aws/lambda/feature-flag-dev-gateway"
       }
     },
     "HelloLogGroup": {
       "Type": "AWS::Logs::LogGroup",
       "Properties": {
-        "LogGroupName": "/aws/lambda/feature-flag-prod-hello"
+        "LogGroupName": "/aws/lambda/feature-flag-dev-hello"
       }
     },
     "BuildSchemaLogGroup": {
       "Type": "AWS::Logs::LogGroup",
       "Properties": {
-        "LogGroupName": "/aws/lambda/feature-flag-prod-buildSchema"
+        "LogGroupName": "/aws/lambda/feature-flag-dev-buildSchema"
       }
     },
     "IamRoleLambdaExecution": {
@@ -115,7 +115,7 @@
                 "-",
                 [
                   "feature-flag",
-                  "prod",
+                  "dev",
                   "lambda"
                 ]
               ]
@@ -131,7 +131,7 @@
                   ],
                   "Resource": [
                     {
-                      "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/feature-flag-prod*:*"
+                      "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/feature-flag-dev*:*"
                     }
                   ]
                 },
@@ -142,7 +142,7 @@
                   ],
                   "Resource": [
                     {
-                      "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/feature-flag-prod*:*:*"
+                      "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/feature-flag-dev*:*:*"
                     }
                   ]
                 }
@@ -156,7 +156,7 @@
             "-",
             [
               "feature-flag",
-              "prod",
+              "dev",
               {
                 "Ref": "AWS::Region"
               },
@@ -173,9 +173,9 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/feature-flag/prod/1639065187055-2021-12-09T15:53:07.055Z/rover.zip"
+          "S3Key": "serverless/feature-flag/dev/1639840615362-2021-12-18T15:16:55.362Z/rover.zip"
         },
-        "LayerName": "prod-rover-layer",
+        "LayerName": "dev-rover-layer",
         "Description": "Include rover-layer"
       }
     },
@@ -186,17 +186,17 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/feature-flag/prod/1639407899953-2021-12-13T15:04:59.953Z/feature-flag-dev-gateway.zip"
+          "S3Key": "serverless/feature-flag/dev/1639922324911-2021-12-19T13:58:44.911Z/feature-flag-dev-gateway.zip"
         },
         "Handler": "src/functions/gateway.handler",
         "Runtime": "nodejs14.x",
-        "FunctionName": "feature-flag-prod-gateway",
+        "FunctionName": "feature-flag-dev-gateway",
         "MemorySize": 1024,
         "Timeout": 6,
         "Environment": {
           "Variables": {
             "APOLLO_CONFIG_HOME": "/tmp/",
-            "SUPERGRAPH_BUCKET_NAME": "feature-flag-prod-supergraph",
+            "SUPERGRAPH_BUCKET_NAME": "feature-flag-dev-supergraph",
             "SUPERGRAPH_FILE_NAME": "supergraph.txt",
             "SUPERGRAPH_BUCKET_ARN": {
               "Fn::Join": [
@@ -223,7 +223,7 @@
                   ".execute-api.",
                   "eu-north-1",
                   ".amazonaws.com/",
-                  "prod"
+                  "dev"
                 ]
               ]
             }
@@ -248,17 +248,17 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/feature-flag/prod/1639407899953-2021-12-13T15:04:59.953Z/feature-flag-dev-hello.zip"
+          "S3Key": "serverless/feature-flag/dev/1639922324911-2021-12-19T13:58:44.911Z/feature-flag-dev-hello.zip"
         },
         "Handler": "src/functions/hello.handler",
         "Runtime": "nodejs14.x",
-        "FunctionName": "feature-flag-prod-hello",
+        "FunctionName": "feature-flag-dev-hello",
         "MemorySize": 1024,
         "Timeout": 6,
         "Environment": {
           "Variables": {
             "APOLLO_CONFIG_HOME": "/tmp/",
-            "SUPERGRAPH_BUCKET_NAME": "feature-flag-prod-supergraph",
+            "SUPERGRAPH_BUCKET_NAME": "feature-flag-dev-supergraph",
             "SUPERGRAPH_FILE_NAME": "supergraph.txt",
             "SUPERGRAPH_BUCKET_ARN": {
               "Fn::Join": [
@@ -285,7 +285,7 @@
                   ".execute-api.",
                   "eu-north-1",
                   ".amazonaws.com/",
-                  "prod"
+                  "dev"
                 ]
               ]
             }
@@ -309,17 +309,17 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/feature-flag/prod/1639407899953-2021-12-13T15:04:59.953Z/feature-flag-dev-buildSchema.zip"
+          "S3Key": "serverless/feature-flag/dev/1639922324911-2021-12-19T13:58:44.911Z/feature-flag-dev-buildSchema.zip"
         },
         "Handler": "src/functions/buildSchema.handler",
         "Runtime": "nodejs14.x",
-        "FunctionName": "feature-flag-prod-buildSchema",
+        "FunctionName": "feature-flag-dev-buildSchema",
         "MemorySize": 1024,
         "Timeout": 6,
         "Environment": {
           "Variables": {
             "APOLLO_CONFIG_HOME": "/tmp/",
-            "SUPERGRAPH_BUCKET_NAME": "feature-flag-prod-supergraph",
+            "SUPERGRAPH_BUCKET_NAME": "feature-flag-dev-supergraph",
             "SUPERGRAPH_FILE_NAME": "supergraph.txt",
             "SUPERGRAPH_BUCKET_ARN": {
               "Fn::Join": [
@@ -346,7 +346,7 @@
                   ".execute-api.",
                   "eu-north-1",
                   ".amazonaws.com/",
-                  "prod"
+                  "dev"
                 ]
               ]
             }
@@ -369,7 +369,7 @@
         "BuildSchemaLogGroup"
       ]
     },
-    "HelloLambdaVersionX2tzhU5oASaHYWhRIYoQJ3qCDvzON9hPMiBBcbqI": {
+    "HelloLambdaVersiongr5pVx9weXPoQYjGS2QEa3uEVg1EUG6pH24nGMw": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
@@ -379,30 +379,30 @@
         "CodeSha256": "B16situCwbnSoGvSIyhsjyLC1sej7gjNMYgW49TpJac="
       }
     },
-    "GatewayLambdaVersionWhwm5n247hYikmsEf1dFMFNVPu1CBZiWmhdJE17RmA": {
+    "GatewayLambdaVersionK3cfqjvTvR4yChz73HKZpjprd67aWVCwh7soIqU8cXk": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "GatewayLambdaFunction"
         },
-        "CodeSha256": "Lsa2vK7ljkLoi8qWzQsGN0seWydhwt+pq5F+2xw2juM="
+        "CodeSha256": "HB/3/eOReD1cSv7oortVVI/m3pqjw/H6XP6TsqTlnKY="
       }
     },
-    "BuildSchemaLambdaVersionoa3qTr7bgCN1bxl3BWtD780qPG7Kh8sJDJj7CS9jso": {
+    "BuildSchemaLambdaVersionCSheBgbIg34QHUEbnX9H3BojsfWHNGRj7pM5ZkmaYY": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "BuildSchemaLambdaFunction"
         },
-        "CodeSha256": "/so+/JGQgdib4vhiK3xIrDv1/fozMSfxJxxN43W8rC8="
+        "CodeSha256": "qqGBePg9ynnYgSmOWfKAEQjJBWtRvKrlUcdb6UV/RVI="
       }
     },
     "ApiGatewayRestApi": {
       "Type": "AWS::ApiGateway::RestApi",
       "Properties": {
-        "Name": "prod-feature-flag",
+        "Name": "dev-feature-flag",
         "EndpointConfiguration": {
           "Types": [
             "EDGE"
@@ -603,7 +603,10 @@
           "Ref": "ApiGatewayRestApi"
         },
         "ApiKeyRequired": false,
-        "AuthorizationType": "NONE",
+        "AuthorizationType": "COGNITO_USER_POOLS",
+        "AuthorizerId": {
+          "Ref": "ApiGatewayAuthorizer"
+        },
         "Integration": {
           "IntegrationHttpMethod": "POST",
           "Type": "AWS_PROXY",
@@ -649,7 +652,10 @@
           "Ref": "ApiGatewayRestApi"
         },
         "ApiKeyRequired": false,
-        "AuthorizationType": "NONE",
+        "AuthorizationType": "COGNITO_USER_POOLS",
+        "AuthorizerId": {
+          "Ref": "ApiGatewayAuthorizer"
+        },
         "Integration": {
           "IntegrationHttpMethod": "POST",
           "Type": "AWS_PROXY",
@@ -695,7 +701,10 @@
           "Ref": "ApiGatewayRestApi"
         },
         "ApiKeyRequired": false,
-        "AuthorizationType": "NONE",
+        "AuthorizationType": "COGNITO_USER_POOLS",
+        "AuthorizerId": {
+          "Ref": "ApiGatewayAuthorizer"
+        },
         "Integration": {
           "IntegrationHttpMethod": "POST",
           "Type": "AWS_PROXY",
@@ -741,7 +750,10 @@
           "Ref": "ApiGatewayRestApi"
         },
         "ApiKeyRequired": false,
-        "AuthorizationType": "NONE",
+        "AuthorizationType": "COGNITO_USER_POOLS",
+        "AuthorizerId": {
+          "Ref": "ApiGatewayAuthorizer"
+        },
         "Integration": {
           "IntegrationHttpMethod": "POST",
           "Type": "AWS_PROXY",
@@ -787,7 +799,10 @@
           "Ref": "ApiGatewayRestApi"
         },
         "ApiKeyRequired": false,
-        "AuthorizationType": "NONE",
+        "AuthorizationType": "COGNITO_USER_POOLS",
+        "AuthorizerId": {
+          "Ref": "ApiGatewayAuthorizer"
+        },
         "Integration": {
           "IntegrationHttpMethod": "POST",
           "Type": "AWS_PROXY",
@@ -821,13 +836,13 @@
         "BuildSchemaLambdaPermissionApiGateway"
       ]
     },
-    "ApiGatewayDeployment1639407894277": {
+    "ApiGatewayDeployment1639922320630": {
       "Type": "AWS::ApiGateway::Deployment",
       "Properties": {
         "RestApiId": {
           "Ref": "ApiGatewayRestApi"
         },
-        "StageName": "prod"
+        "StageName": "dev"
       },
       "DependsOn": [
         "ApiGatewayMethodGraphqlOptions",
@@ -977,7 +992,7 @@
                 "-",
                 [
                   "feature-flag",
-                  "prod",
+                  "dev",
                   "lambda"
                 ]
               ]
@@ -994,7 +1009,7 @@
                   ],
                   "Resource": [
                     {
-                      "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/feature-flag-prod-gateway:*:*"
+                      "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/feature-flag-dev-gateway:*:*"
                     }
                   ]
                 },
@@ -1053,7 +1068,7 @@
                 "-",
                 [
                   "feature-flag",
-                  "prod",
+                  "dev",
                   "lambda"
                 ]
               ]
@@ -1070,7 +1085,7 @@
                   ],
                   "Resource": [
                     {
-                      "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/feature-flag-prod-buildSchema:*:*"
+                      "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/feature-flag-dev-buildSchema:*:*"
                     }
                   ]
                 },
@@ -1106,7 +1121,77 @@
     "supergraphBucket": {
       "Type": "AWS::S3::Bucket",
       "Properties": {
-        "BucketName": "feature-flag-prod-supergraph"
+        "BucketName": "feature-flag-dev-supergraph"
+      }
+    },
+    "CognitoUserPool": {
+      "Type": "AWS::Cognito::UserPool",
+      "Properties": {
+        "UserPoolName": "feature-flag-dev-user-pool",
+        "UsernameAttributes": [
+          "email"
+        ],
+        "AutoVerifiedAttributes": [
+          "email"
+        ]
+      }
+    },
+    "CognitoUserPoolClient": {
+      "Type": "AWS::Cognito::UserPoolClient",
+      "Properties": {
+        "ClientName": "feature-flag-dev-user-pool-client",
+        "UserPoolId": {
+          "Ref": "CognitoUserPool"
+        },
+        "ExplicitAuthFlows": [
+          "USER_PASSWORD_AUTH"
+        ],
+        "GenerateSecret": false
+      }
+    },
+    "CognitoMachinePoolClient": {
+      "Type": "AWS::Cognito::UserPoolClient",
+      "Properties": {
+        "ClientName": "feature-flag-dev-user-pool-client-machine",
+        "UserPoolId": {
+          "Ref": "CognitoUserPool"
+        },
+        "AllowedOAuthFlows": [
+          "client_credentials"
+        ],
+        "GenerateSecret": true
+      }
+    },
+    "CognitoUserPoolDomain": {
+      "Type": "AWS::Cognito::UserPoolDomain",
+      "Properties": {
+        "UserPoolId": {
+          "Ref": "CognitoUserPool"
+        },
+        "Domain": "randomstringusedasdomain"
+      }
+    },
+    "ApiGatewayAuthorizer": {
+      "DependsOn": [
+        "ApiGatewayRestApi"
+      ],
+      "Type": "AWS::ApiGateway::Authorizer",
+      "Properties": {
+        "AuthorizerResultTtlInSeconds": 300,
+        "IdentitySource": "method.request.header.Authorization",
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        },
+        "Type": "COGNITO_USER_POOLS",
+        "Name": "Authorizer",
+        "ProviderARNs": [
+          {
+            "Fn::GetAtt": [
+              "CognitoUserPool",
+              "Arn"
+            ]
+          }
+        ]
       }
     }
   },
@@ -1116,7 +1201,7 @@
         "Ref": "ServerlessDeploymentBucket"
       },
       "Export": {
-        "Name": "sls-feature-flag-prod-ServerlessDeploymentBucketName"
+        "Name": "sls-feature-flag-dev-ServerlessDeploymentBucketName"
       }
     },
     "RoverLambdaLayerQualifiedArn": {
@@ -1125,48 +1210,48 @@
         "Ref": "RoverLambdaLayer"
       },
       "Export": {
-        "Name": "sls-feature-flag-prod-RoverLambdaLayerQualifiedArn"
+        "Name": "sls-feature-flag-dev-RoverLambdaLayerQualifiedArn"
       }
     },
     "RoverLambdaLayerHash": {
       "Description": "Current Lambda layer hash",
-      "Value": "094bd080b12eea41325a03b7e4fa383e5c76cf88",
+      "Value": "efcaa1773031ccf36fedaae823d57230a47f9f5c",
       "Export": {
-        "Name": "sls-feature-flag-prod-RoverLambdaLayerHash"
+        "Name": "sls-feature-flag-dev-RoverLambdaLayerHash"
       }
     },
     "RoverLambdaLayerS3Key": {
       "Description": "Current Lambda layer S3Key",
-      "Value": "serverless/feature-flag/prod/1639065187055-2021-12-09T15:53:07.055Z/rover.zip",
+      "Value": "serverless/feature-flag/dev/1639840615362-2021-12-18T15:16:55.362Z/rover.zip",
       "Export": {
-        "Name": "sls-feature-flag-prod-RoverLambdaLayerS3Key"
+        "Name": "sls-feature-flag-dev-RoverLambdaLayerS3Key"
       }
     },
     "HelloLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "HelloLambdaVersionX2tzhU5oASaHYWhRIYoQJ3qCDvzON9hPMiBBcbqI"
+        "Ref": "HelloLambdaVersiongr5pVx9weXPoQYjGS2QEa3uEVg1EUG6pH24nGMw"
       },
       "Export": {
-        "Name": "sls-feature-flag-prod-HelloLambdaFunctionQualifiedArn"
+        "Name": "sls-feature-flag-dev-HelloLambdaFunctionQualifiedArn"
       }
     },
     "GatewayLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "GatewayLambdaVersionWhwm5n247hYikmsEf1dFMFNVPu1CBZiWmhdJE17RmA"
+        "Ref": "GatewayLambdaVersionK3cfqjvTvR4yChz73HKZpjprd67aWVCwh7soIqU8cXk"
       },
       "Export": {
-        "Name": "sls-feature-flag-prod-GatewayLambdaFunctionQualifiedArn"
+        "Name": "sls-feature-flag-dev-GatewayLambdaFunctionQualifiedArn"
       }
     },
     "BuildSchemaLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "BuildSchemaLambdaVersionoa3qTr7bgCN1bxl3BWtD780qPG7Kh8sJDJj7CS9jso"
+        "Ref": "BuildSchemaLambdaVersionCSheBgbIg34QHUEbnX9H3BojsfWHNGRj7pM5ZkmaYY"
       },
       "Export": {
-        "Name": "sls-feature-flag-prod-BuildSchemaLambdaFunctionQualifiedArn"
+        "Name": "sls-feature-flag-dev-BuildSchemaLambdaFunctionQualifiedArn"
       }
     },
     "ServiceEndpoint": {
@@ -1187,12 +1272,22 @@
             {
               "Ref": "AWS::URLSuffix"
             },
-            "/prod"
+            "/dev"
           ]
         ]
       },
       "Export": {
-        "Name": "sls-feature-flag-prod-ServiceEndpoint"
+        "Name": "sls-feature-flag-dev-ServiceEndpoint"
+      }
+    },
+    "UserPoolId": {
+      "Value": {
+        "Ref": "CognitoUserPool"
+      }
+    },
+    "UserPoolClientId": {
+      "Value": {
+        "Ref": "CognitoUserPoolClient"
       }
     }
   }

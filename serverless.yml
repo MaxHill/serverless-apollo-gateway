@@ -4,6 +4,7 @@ provider:
   name: aws
   region: eu-north-1
   runtime: nodejs14.x
+  stage: dev
   profile: 'feature-flags'
   lambdaHashingVersion: "20201221"
   environment: ${file(env.yml):${self:custom.stage}}
@@ -19,9 +20,10 @@ package:
 
 custom:
   stage: "${opt:stage, self:provider.stage}"
-  scripts:
-    hooks:
-      'deploy:finalize': sls invoke -f buildSchema -s ${self:custom.stage}
+  stackName: "${self:service}-${self:custom.stage}"
+  #scripts:
+  #  hooks:
+  #    'deploy:finalize': sls invoke -f buildSchema -s ${self:custom.stage}
   esbuild:
     loader:
       .yml: text
@@ -34,6 +36,11 @@ custom:
             Fn::GetAtt: [supergraphBucket,Arn],
             '/*'
         ]]
+  userPool:
+    pool:
+      name: ${self:custom.stackName}-user-pool
+    client:
+      name: ${self:custom.userPool.pool.name}-client
 
 functions:
   gateway:
@@ -42,10 +49,18 @@ functions:
       - http:
           path: /graphql
           method: post
+          authorizer:
+            type: COGNITO_USER_POOLS
+            authorizerId:
+              Ref: ApiGatewayAuthorizer
           cors: true
       - http:
           path: /graphql
           method: get
+          authorizer:
+            type: COGNITO_USER_POOLS
+            authorizerId:
+              Ref: ApiGatewayAuthorizer
           cors: true
     iamRoleStatementsName: '${self:service}-role-gateway'
     iamRoleStatements:
@@ -59,10 +74,18 @@ functions:
       - http:
           path: hello
           method: post
+          authorizer:
+            type: COGNITO_USER_POOLS
+            authorizerId:
+              Ref: ApiGatewayAuthorizer
           cors: true
       - http:
           path: hello
           method: get
+          authorizer:
+            type: COGNITO_USER_POOLS
+            authorizerId:
+              Ref: ApiGatewayAuthorizer
           cors: true
 
   buildSchema:
@@ -74,6 +97,10 @@ functions:
           path: build-schema
           method: get
           cors: true
+          authorizer:
+            type: COGNITO_USER_POOLS
+            authorizerId:
+              Ref: ApiGatewayAuthorizer
     iamRoleStatementsName: '${self:service}-role-buildSchema'
     iamRoleStatements:
       - Effect: 'Allow'
@@ -92,3 +119,64 @@ resources:
       Type: AWS::S3::Bucket
       Properties:
         BucketName: ${self:custom.s3Buckets.supergraph.name}
+
+    CognitoUserPool:
+      Type: AWS::Cognito::UserPool
+      Properties:
+        UserPoolName: ${self:custom.userPool.pool.name}
+        UsernameAttributes:
+          - email
+        AutoVerifiedAttributes:
+          - email
+
+    CognitoUserPoolClient:
+      Type: AWS::Cognito::UserPoolClient
+      Properties:
+        ClientName: ${self:custom.userPool.client.name}
+        UserPoolId:
+          Ref: CognitoUserPool
+        ExplicitAuthFlows:
+          - USER_PASSWORD_AUTH
+        GenerateSecret: false
+
+    CognitoMachinePoolClient:
+      Type: AWS::Cognito::UserPoolClient
+      Properties:
+        ClientName: ${self:custom.userPool.client.name}-machine
+        UserPoolId:
+          Ref: CognitoUserPool
+        AllowedOAuthFlows:
+          - client_credentials
+        GenerateSecret: true
+
+    CognitoUserPoolDomain:
+        Type: AWS::Cognito::UserPoolDomain
+        Properties:
+          UserPoolId: !Ref CognitoUserPool
+          Domain: "randomstringusedasdomain"
+
+    ApiGatewayAuthorizer:
+      DependsOn:
+        - ApiGatewayRestApi
+      Type: AWS::ApiGateway::Authorizer
+      Properties:
+        AuthorizerResultTtlInSeconds: 300
+        IdentitySource: method.request.header.Authorization
+        RestApiId:
+          Ref: ApiGatewayRestApi
+        Type: COGNITO_USER_POOLS
+        Name: Authorizer
+        ProviderARNs:
+          - Fn::GetAtt:
+                - CognitoUserPool
+                - Arn
+
+  # Print out the Id of the Identity Pool that is created
+  Outputs:
+    UserPoolId:
+      Value:
+        Ref: CognitoUserPool
+
+    UserPoolClientId:
+      Value:
+        Ref: CognitoUserPoolClient
