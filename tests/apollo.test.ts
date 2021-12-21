@@ -1,5 +1,6 @@
 import {
   createApolloHandler,
+  gatewayFactory,
   generateSuperGraph,
   getSuperGraphFromS3,
   saveSuperGraphToS3
@@ -16,23 +17,44 @@ describe('[apollo]', () => {
     AWSMock.setSDKInstance(AWS);
     AWSMock.restore();
   });
+  describe('createApolloGateway', () => {
+    it('should create apollo gateway', () => {
+      const mockGateway = jest.fn().mockImplementation(() => ({ testVal: 'someVal' }));
+      const remoteDataSource = jest.fn();
+      gatewayFactory(remoteDataSource, mockGateway)('supergraph');
+
+      expect(mockGateway).toHaveBeenCalledWith(
+        expect.objectContaining({
+          supergraphSdl: 'supergraph',
+          buildService: expect.any(Function)
+        })
+      );
+    });
+
+    it('should add header apiKey requests', () => {
+      process.env['API_KEY'] = 'test-key';
+      const mockGateway = jest.fn().mockImplementation((config) => config.buildService('url'));
+      const remoteDataSource = jest.fn().mockImplementation((config) => {
+        const request = { http: { headers: { set: jest.fn() } } };
+        config.willSendRequest({ request });
+        expect(request.http.headers.set).toHaveBeenCalledWith('x-api-key', 'test-key');
+      });
+
+      gatewayFactory(remoteDataSource, mockGateway)('supergraph');
+    });
+  });
   describe('createApolloHandler', () => {
-    let mockGateway: typeof ApolloGateway;
+    let mockCreateFactory = gatewayFactory(); // Just for type gets overridden
     let mockServer: typeof ApolloServer;
     beforeEach(() => {
-      mockGateway = jest.fn().mockImplementation(() => ({ testVal: 'someVal' }));
+      mockCreateFactory = jest.fn().mockImplementation(() => ({ testVal: 'someVal' }));
       mockServer = jest.fn().mockImplementation(() => ({
         createHandler: () => 'mockHandler'
       }));
     });
 
-    it('should initiate gateway with supergraphSdl', () => {
-      createApolloHandler('test', mockGateway, mockServer);
-      expect(mockGateway).toHaveBeenCalledWith({ supergraphSdl: 'test' });
-    });
-
     it('should initiate server with gateway', () => {
-      createApolloHandler('test', mockGateway, mockServer);
+      createApolloHandler('test', mockCreateFactory, mockServer);
       expect(mockServer).toHaveBeenCalledWith(
         expect.objectContaining({
           gateway: { testVal: 'someVal' }
@@ -40,7 +62,7 @@ describe('[apollo]', () => {
       );
     });
     it('should return create handler', () => {
-      const handler = createApolloHandler('test', mockGateway, mockServer);
+      const handler = createApolloHandler('test', mockCreateFactory, mockServer);
       expect(handler).toEqual('mockHandler');
     });
   });

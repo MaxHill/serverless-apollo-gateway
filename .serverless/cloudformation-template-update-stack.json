@@ -173,7 +173,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/feature-flag/dev/1639840615362-2021-12-18T15:16:55.362Z/rover.zip"
+          "S3Key": "serverless/feature-flag/dev/1639936626195-2021-12-19T17:57:06.195Z/rover.zip"
         },
         "LayerName": "dev-rover-layer",
         "Description": "Include rover-layer"
@@ -186,7 +186,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/feature-flag/dev/1639922324911-2021-12-19T13:58:44.911Z/feature-flag-dev-gateway.zip"
+          "S3Key": "serverless/feature-flag/dev/1640106249502-2021-12-21T17:04:09.502Z/feature-flag-dev-gateway.zip"
         },
         "Handler": "src/functions/gateway.handler",
         "Runtime": "nodejs14.x",
@@ -212,6 +212,8 @@
                 ]
               ]
             },
+            "DOMAIN_SUFFIX": "domainsuffixthatisunique",
+            "API_KEY": "THIS_SHOULD_BE_GENERATED_MORE_SAFELY",
             "API_URL": {
               "Fn::Join": [
                 "",
@@ -248,7 +250,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/feature-flag/dev/1639922324911-2021-12-19T13:58:44.911Z/feature-flag-dev-hello.zip"
+          "S3Key": "serverless/feature-flag/dev/1640106249502-2021-12-21T17:04:09.502Z/feature-flag-dev-hello.zip"
         },
         "Handler": "src/functions/hello.handler",
         "Runtime": "nodejs14.x",
@@ -274,6 +276,8 @@
                 ]
               ]
             },
+            "DOMAIN_SUFFIX": "domainsuffixthatisunique",
+            "API_KEY": "THIS_SHOULD_BE_GENERATED_MORE_SAFELY",
             "API_URL": {
               "Fn::Join": [
                 "",
@@ -309,7 +313,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/feature-flag/dev/1639922324911-2021-12-19T13:58:44.911Z/feature-flag-dev-buildSchema.zip"
+          "S3Key": "serverless/feature-flag/dev/1640106249502-2021-12-21T17:04:09.502Z/feature-flag-dev-buildSchema.zip"
         },
         "Handler": "src/functions/buildSchema.handler",
         "Runtime": "nodejs14.x",
@@ -335,6 +339,8 @@
                 ]
               ]
             },
+            "DOMAIN_SUFFIX": "domainsuffixthatisunique",
+            "API_KEY": "THIS_SHOULD_BE_GENERATED_MORE_SAFELY",
             "API_URL": {
               "Fn::Join": [
                 "",
@@ -369,34 +375,34 @@
         "BuildSchemaLogGroup"
       ]
     },
-    "HelloLambdaVersiongr5pVx9weXPoQYjGS2QEa3uEVg1EUG6pH24nGMw": {
+    "HelloLambdaVersionQh28O4n9mX8D49jqRGKMUtJYk5qnaC1Lnhzqe6o4q0": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "HelloLambdaFunction"
         },
-        "CodeSha256": "B16situCwbnSoGvSIyhsjyLC1sej7gjNMYgW49TpJac="
+        "CodeSha256": "46lEyiUkU5cWKk+hA58t/M+shKk5cKFjrI85bhxOePw="
       }
     },
-    "GatewayLambdaVersionK3cfqjvTvR4yChz73HKZpjprd67aWVCwh7soIqU8cXk": {
+    "GatewayLambdaVersionS4m1AL5kwtJbc8dEx6YgqoTV4gZVnanVtQT6rMr6g": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "GatewayLambdaFunction"
         },
-        "CodeSha256": "HB/3/eOReD1cSv7oortVVI/m3pqjw/H6XP6TsqTlnKY="
+        "CodeSha256": "f9eKfgxn9URw8dMv3ZYSxKfbn/V05d2daSr0Ylz4e0o="
       }
     },
-    "BuildSchemaLambdaVersionCSheBgbIg34QHUEbnX9H3BojsfWHNGRj7pM5ZkmaYY": {
+    "BuildSchemaLambdaVersionT9XPWLhejB5xhqr03sWBmau1diYZPKIimM06PCvfQ": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "BuildSchemaLambdaFunction"
         },
-        "CodeSha256": "qqGBePg9ynnYgSmOWfKAEQjJBWtRvKrlUcdb6UV/RVI="
+        "CodeSha256": "DJoYxWyHqzdqWIKfNDit08IoowZ+roeteppWw3JUVzk="
       }
     },
     "ApiGatewayRestApi": {
@@ -409,21 +415,6 @@
           ]
         },
         "Policy": ""
-      }
-    },
-    "ApiGatewayResourceGraphql": {
-      "Type": "AWS::ApiGateway::Resource",
-      "Properties": {
-        "ParentId": {
-          "Fn::GetAtt": [
-            "ApiGatewayRestApi",
-            "RootResourceId"
-          ]
-        },
-        "PathPart": "graphql",
-        "RestApiId": {
-          "Ref": "ApiGatewayRestApi"
-        }
       }
     },
     "ApiGatewayResourceHello": {
@@ -456,239 +447,6 @@
         }
       }
     },
-    "ApiGatewayMethodGraphqlOptions": {
-      "Type": "AWS::ApiGateway::Method",
-      "Properties": {
-        "AuthorizationType": "NONE",
-        "HttpMethod": "OPTIONS",
-        "MethodResponses": [
-          {
-            "StatusCode": "200",
-            "ResponseParameters": {
-              "method.response.header.Access-Control-Allow-Origin": true,
-              "method.response.header.Access-Control-Allow-Headers": true,
-              "method.response.header.Access-Control-Allow-Methods": true
-            },
-            "ResponseModels": {}
-          }
-        ],
-        "RequestParameters": {},
-        "Integration": {
-          "Type": "MOCK",
-          "RequestTemplates": {
-            "application/json": "{statusCode:200}"
-          },
-          "ContentHandling": "CONVERT_TO_TEXT",
-          "IntegrationResponses": [
-            {
-              "StatusCode": "200",
-              "ResponseParameters": {
-                "method.response.header.Access-Control-Allow-Origin": "'*'",
-                "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent'",
-                "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,POST'"
-              },
-              "ResponseTemplates": {
-                "application/json": ""
-              }
-            }
-          ]
-        },
-        "ResourceId": {
-          "Ref": "ApiGatewayResourceGraphql"
-        },
-        "RestApiId": {
-          "Ref": "ApiGatewayRestApi"
-        }
-      }
-    },
-    "ApiGatewayMethodHelloOptions": {
-      "Type": "AWS::ApiGateway::Method",
-      "Properties": {
-        "AuthorizationType": "NONE",
-        "HttpMethod": "OPTIONS",
-        "MethodResponses": [
-          {
-            "StatusCode": "200",
-            "ResponseParameters": {
-              "method.response.header.Access-Control-Allow-Origin": true,
-              "method.response.header.Access-Control-Allow-Headers": true,
-              "method.response.header.Access-Control-Allow-Methods": true
-            },
-            "ResponseModels": {}
-          }
-        ],
-        "RequestParameters": {},
-        "Integration": {
-          "Type": "MOCK",
-          "RequestTemplates": {
-            "application/json": "{statusCode:200}"
-          },
-          "ContentHandling": "CONVERT_TO_TEXT",
-          "IntegrationResponses": [
-            {
-              "StatusCode": "200",
-              "ResponseParameters": {
-                "method.response.header.Access-Control-Allow-Origin": "'*'",
-                "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent'",
-                "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,POST'"
-              },
-              "ResponseTemplates": {
-                "application/json": ""
-              }
-            }
-          ]
-        },
-        "ResourceId": {
-          "Ref": "ApiGatewayResourceHello"
-        },
-        "RestApiId": {
-          "Ref": "ApiGatewayRestApi"
-        }
-      }
-    },
-    "ApiGatewayMethodBuildDashschemaOptions": {
-      "Type": "AWS::ApiGateway::Method",
-      "Properties": {
-        "AuthorizationType": "NONE",
-        "HttpMethod": "OPTIONS",
-        "MethodResponses": [
-          {
-            "StatusCode": "200",
-            "ResponseParameters": {
-              "method.response.header.Access-Control-Allow-Origin": true,
-              "method.response.header.Access-Control-Allow-Headers": true,
-              "method.response.header.Access-Control-Allow-Methods": true
-            },
-            "ResponseModels": {}
-          }
-        ],
-        "RequestParameters": {},
-        "Integration": {
-          "Type": "MOCK",
-          "RequestTemplates": {
-            "application/json": "{statusCode:200}"
-          },
-          "ContentHandling": "CONVERT_TO_TEXT",
-          "IntegrationResponses": [
-            {
-              "StatusCode": "200",
-              "ResponseParameters": {
-                "method.response.header.Access-Control-Allow-Origin": "'*'",
-                "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent'",
-                "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET'"
-              },
-              "ResponseTemplates": {
-                "application/json": ""
-              }
-            }
-          ]
-        },
-        "ResourceId": {
-          "Ref": "ApiGatewayResourceBuildDashschema"
-        },
-        "RestApiId": {
-          "Ref": "ApiGatewayRestApi"
-        }
-      }
-    },
-    "ApiGatewayMethodGraphqlPost": {
-      "Type": "AWS::ApiGateway::Method",
-      "Properties": {
-        "HttpMethod": "POST",
-        "RequestParameters": {},
-        "ResourceId": {
-          "Ref": "ApiGatewayResourceGraphql"
-        },
-        "RestApiId": {
-          "Ref": "ApiGatewayRestApi"
-        },
-        "ApiKeyRequired": false,
-        "AuthorizationType": "COGNITO_USER_POOLS",
-        "AuthorizerId": {
-          "Ref": "ApiGatewayAuthorizer"
-        },
-        "Integration": {
-          "IntegrationHttpMethod": "POST",
-          "Type": "AWS_PROXY",
-          "Uri": {
-            "Fn::Join": [
-              "",
-              [
-                "arn:",
-                {
-                  "Ref": "AWS::Partition"
-                },
-                ":apigateway:",
-                {
-                  "Ref": "AWS::Region"
-                },
-                ":lambda:path/2015-03-31/functions/",
-                {
-                  "Fn::GetAtt": [
-                    "GatewayLambdaFunction",
-                    "Arn"
-                  ]
-                },
-                "/invocations"
-              ]
-            ]
-          }
-        },
-        "MethodResponses": []
-      },
-      "DependsOn": [
-        "GatewayLambdaPermissionApiGateway"
-      ]
-    },
-    "ApiGatewayMethodGraphqlGet": {
-      "Type": "AWS::ApiGateway::Method",
-      "Properties": {
-        "HttpMethod": "GET",
-        "RequestParameters": {},
-        "ResourceId": {
-          "Ref": "ApiGatewayResourceGraphql"
-        },
-        "RestApiId": {
-          "Ref": "ApiGatewayRestApi"
-        },
-        "ApiKeyRequired": false,
-        "AuthorizationType": "COGNITO_USER_POOLS",
-        "AuthorizerId": {
-          "Ref": "ApiGatewayAuthorizer"
-        },
-        "Integration": {
-          "IntegrationHttpMethod": "POST",
-          "Type": "AWS_PROXY",
-          "Uri": {
-            "Fn::Join": [
-              "",
-              [
-                "arn:",
-                {
-                  "Ref": "AWS::Partition"
-                },
-                ":apigateway:",
-                {
-                  "Ref": "AWS::Region"
-                },
-                ":lambda:path/2015-03-31/functions/",
-                {
-                  "Fn::GetAtt": [
-                    "GatewayLambdaFunction",
-                    "Arn"
-                  ]
-                },
-                "/invocations"
-              ]
-            ]
-          }
-        },
-        "MethodResponses": []
-      },
-      "DependsOn": [
-        "GatewayLambdaPermissionApiGateway"
-      ]
-    },
     "ApiGatewayMethodHelloPost": {
       "Type": "AWS::ApiGateway::Method",
       "Properties": {
@@ -700,11 +458,8 @@
         "RestApiId": {
           "Ref": "ApiGatewayRestApi"
         },
-        "ApiKeyRequired": false,
-        "AuthorizationType": "COGNITO_USER_POOLS",
-        "AuthorizerId": {
-          "Ref": "ApiGatewayAuthorizer"
-        },
+        "ApiKeyRequired": true,
+        "AuthorizationType": "NONE",
         "Integration": {
           "IntegrationHttpMethod": "POST",
           "Type": "AWS_PROXY",
@@ -749,11 +504,8 @@
         "RestApiId": {
           "Ref": "ApiGatewayRestApi"
         },
-        "ApiKeyRequired": false,
-        "AuthorizationType": "COGNITO_USER_POOLS",
-        "AuthorizerId": {
-          "Ref": "ApiGatewayAuthorizer"
-        },
+        "ApiKeyRequired": true,
+        "AuthorizationType": "NONE",
         "Integration": {
           "IntegrationHttpMethod": "POST",
           "Type": "AWS_PROXY",
@@ -798,11 +550,8 @@
         "RestApiId": {
           "Ref": "ApiGatewayRestApi"
         },
-        "ApiKeyRequired": false,
-        "AuthorizationType": "COGNITO_USER_POOLS",
-        "AuthorizerId": {
-          "Ref": "ApiGatewayAuthorizer"
-        },
+        "ApiKeyRequired": true,
+        "AuthorizationType": "NONE",
         "Integration": {
           "IntegrationHttpMethod": "POST",
           "Type": "AWS_PROXY",
@@ -836,7 +585,7 @@
         "BuildSchemaLambdaPermissionApiGateway"
       ]
     },
-    "ApiGatewayDeployment1639922320630": {
+    "ApiGatewayDeployment1640106243182": {
       "Type": "AWS::ApiGateway::Deployment",
       "Properties": {
         "RestApiId": {
@@ -845,50 +594,53 @@
         "StageName": "dev"
       },
       "DependsOn": [
-        "ApiGatewayMethodGraphqlOptions",
-        "ApiGatewayMethodHelloOptions",
-        "ApiGatewayMethodBuildDashschemaOptions",
-        "ApiGatewayMethodGraphqlPost",
-        "ApiGatewayMethodGraphqlGet",
         "ApiGatewayMethodHelloPost",
         "ApiGatewayMethodHelloGet",
         "ApiGatewayMethodBuildDashschemaGet"
       ]
     },
-    "GatewayLambdaPermissionApiGateway": {
-      "Type": "AWS::Lambda::Permission",
+    "ApiGatewayApiKey1": {
+      "Type": "AWS::ApiGateway::ApiKey",
       "Properties": {
-        "FunctionName": {
-          "Fn::GetAtt": [
-            "GatewayLambdaFunction",
-            "Arn"
-          ]
+        "Enabled": true,
+        "Name": "feature-flag-dev-apiKey",
+        "Value": "THIS_SHOULD_BE_GENERATED_MORE_SAFELY",
+        "StageKeys": [
+          {
+            "RestApiId": {
+              "Ref": "ApiGatewayRestApi"
+            },
+            "StageName": "dev"
+          }
+        ]
+      },
+      "DependsOn": "ApiGatewayDeployment1640106243182"
+    },
+    "ApiGatewayUsagePlan": {
+      "Type": "AWS::ApiGateway::UsagePlan",
+      "DependsOn": "ApiGatewayDeployment1640106243182",
+      "Properties": {
+        "ApiStages": [
+          {
+            "ApiId": {
+              "Ref": "ApiGatewayRestApi"
+            },
+            "Stage": "dev"
+          }
+        ],
+        "Description": "Usage plan for feature-flag dev stage",
+        "UsagePlanName": "feature-flag-dev"
+      }
+    },
+    "ApiGatewayUsagePlanKey1": {
+      "Type": "AWS::ApiGateway::UsagePlanKey",
+      "Properties": {
+        "KeyId": {
+          "Ref": "ApiGatewayApiKey1"
         },
-        "Action": "lambda:InvokeFunction",
-        "Principal": "apigateway.amazonaws.com",
-        "SourceArn": {
-          "Fn::Join": [
-            "",
-            [
-              "arn:",
-              {
-                "Ref": "AWS::Partition"
-              },
-              ":execute-api:",
-              {
-                "Ref": "AWS::Region"
-              },
-              ":",
-              {
-                "Ref": "AWS::AccountId"
-              },
-              ":",
-              {
-                "Ref": "ApiGatewayRestApi"
-              },
-              "/*/*"
-            ]
-          ]
+        "KeyType": "API_KEY",
+        "UsagePlanId": {
+          "Ref": "ApiGatewayUsagePlan"
         }
       }
     },
@@ -965,6 +717,166 @@
           ]
         }
       }
+    },
+    "HttpApi": {
+      "Type": "AWS::ApiGatewayV2::Api",
+      "Properties": {
+        "Name": "dev-feature-flag",
+        "ProtocolType": "HTTP"
+      },
+      "DependsOn": [
+        "serviceUserPool"
+      ]
+    },
+    "HttpApiStage": {
+      "Type": "AWS::ApiGatewayV2::Stage",
+      "Properties": {
+        "ApiId": {
+          "Ref": "HttpApi"
+        },
+        "StageName": "$default",
+        "AutoDeploy": true,
+        "DefaultRouteSettings": {
+          "DetailedMetricsEnabled": false
+        }
+      }
+    },
+    "HttpApiAuthorizerServiceAuthorizer": {
+      "Type": "AWS::ApiGatewayV2::Authorizer",
+      "Properties": {
+        "ApiId": {
+          "Ref": "HttpApi"
+        },
+        "Name": "serviceAuthorizer",
+        "IdentitySource": [
+          "$request.header.Authorization"
+        ],
+        "AuthorizerType": "JWT",
+        "JwtConfiguration": {
+          "Audience": [
+            {
+              "Ref": "serviceUserPoolClient"
+            }
+          ],
+          "Issuer": {
+            "Fn::Join": [
+              "",
+              [
+                "https://cognito-idp.",
+                "eu-north-1",
+                ".amazonaws.com/",
+                {
+                  "Ref": "serviceUserPool"
+                }
+              ]
+            ]
+          }
+        }
+      }
+    },
+    "GatewayLambdaPermissionHttpApi": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "GatewayLambdaFunction",
+            "Arn"
+          ]
+        },
+        "Action": "lambda:InvokeFunction",
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition"
+              },
+              ":execute-api:",
+              {
+                "Ref": "AWS::Region"
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId"
+              },
+              ":",
+              {
+                "Ref": "HttpApi"
+              },
+              "/*"
+            ]
+          ]
+        }
+      }
+    },
+    "HttpApiIntegrationGateway": {
+      "Type": "AWS::ApiGatewayV2::Integration",
+      "Properties": {
+        "ApiId": {
+          "Ref": "HttpApi"
+        },
+        "IntegrationType": "AWS_PROXY",
+        "IntegrationUri": {
+          "Fn::GetAtt": [
+            "GatewayLambdaFunction",
+            "Arn"
+          ]
+        },
+        "PayloadFormatVersion": "2.0",
+        "TimeoutInMillis": 6500
+      }
+    },
+    "HttpApiRoutePostGraphql": {
+      "Type": "AWS::ApiGatewayV2::Route",
+      "Properties": {
+        "ApiId": {
+          "Ref": "HttpApi"
+        },
+        "RouteKey": "POST /graphql",
+        "Target": {
+          "Fn::Join": [
+            "/",
+            [
+              "integrations",
+              {
+                "Ref": "HttpApiIntegrationGateway"
+              }
+            ]
+          ]
+        },
+        "AuthorizationType": "JWT",
+        "AuthorizerId": {
+          "Ref": "HttpApiAuthorizerServiceAuthorizer"
+        }
+      },
+      "DependsOn": "HttpApiIntegrationGateway"
+    },
+    "HttpApiRouteGetGraphql": {
+      "Type": "AWS::ApiGatewayV2::Route",
+      "Properties": {
+        "ApiId": {
+          "Ref": "HttpApi"
+        },
+        "RouteKey": "GET /graphql",
+        "Target": {
+          "Fn::Join": [
+            "/",
+            [
+              "integrations",
+              {
+                "Ref": "HttpApiIntegrationGateway"
+              }
+            ]
+          ]
+        },
+        "AuthorizationType": "JWT",
+        "AuthorizerId": {
+          "Ref": "HttpApiAuthorizerServiceAuthorizer"
+        }
+      },
+      "DependsOn": "HttpApiIntegrationGateway"
     },
     "GatewayIamRoleLambdaExecution": {
       "Type": "AWS::IAM::Role",
@@ -1108,6 +1020,13 @@
                       ]
                     ]
                   }
+                },
+                {
+                  "Effect": "Allow",
+                  "Action": [
+                    "apigateway:GET"
+                  ],
+                  "Resource": "arn:aws:apigateway:eu-north-1::/apikeys/*"
                 }
               ]
             }
@@ -1124,10 +1043,10 @@
         "BucketName": "feature-flag-dev-supergraph"
       }
     },
-    "CognitoUserPool": {
+    "serviceUserPool": {
       "Type": "AWS::Cognito::UserPool",
       "Properties": {
-        "UserPoolName": "feature-flag-dev-user-pool",
+        "UserPoolName": "service-user-pool-dev",
         "UsernameAttributes": [
           "email"
         ],
@@ -1136,62 +1055,44 @@
         ]
       }
     },
-    "CognitoUserPoolClient": {
+    "serviceUserPoolClient": {
       "Type": "AWS::Cognito::UserPoolClient",
       "Properties": {
-        "ClientName": "feature-flag-dev-user-pool-client",
-        "UserPoolId": {
-          "Ref": "CognitoUserPool"
-        },
-        "ExplicitAuthFlows": [
-          "USER_PASSWORD_AUTH"
-        ],
-        "GenerateSecret": false
-      }
-    },
-    "CognitoMachinePoolClient": {
-      "Type": "AWS::Cognito::UserPoolClient",
-      "Properties": {
-        "ClientName": "feature-flag-dev-user-pool-client-machine",
-        "UserPoolId": {
-          "Ref": "CognitoUserPool"
-        },
+        "ClientName": "service-user-pool-client-dev",
         "AllowedOAuthFlows": [
-          "client_credentials"
+          "implicit"
         ],
-        "GenerateSecret": true
+        "AllowedOAuthFlowsUserPoolClient": true,
+        "AllowedOAuthScopes": [
+          "phone",
+          "email",
+          "openid",
+          "profile",
+          "aws.cognito.signin.user.admin"
+        ],
+        "UserPoolId": {
+          "Ref": "serviceUserPool"
+        },
+        "CallbackURLs": [
+          "https://localhost:3000"
+        ],
+        "ExplicitAuthFlows": [
+          "ALLOW_USER_PASSWORD_AUTH",
+          "ALLOW_REFRESH_TOKEN_AUTH"
+        ],
+        "GenerateSecret": false,
+        "SupportedIdentityProviders": [
+          "COGNITO"
+        ]
       }
     },
-    "CognitoUserPoolDomain": {
+    "serviceUserPoolDomain": {
       "Type": "AWS::Cognito::UserPoolDomain",
       "Properties": {
         "UserPoolId": {
-          "Ref": "CognitoUserPool"
+          "Ref": "serviceUserPool"
         },
-        "Domain": "randomstringusedasdomain"
-      }
-    },
-    "ApiGatewayAuthorizer": {
-      "DependsOn": [
-        "ApiGatewayRestApi"
-      ],
-      "Type": "AWS::ApiGateway::Authorizer",
-      "Properties": {
-        "AuthorizerResultTtlInSeconds": 300,
-        "IdentitySource": "method.request.header.Authorization",
-        "RestApiId": {
-          "Ref": "ApiGatewayRestApi"
-        },
-        "Type": "COGNITO_USER_POOLS",
-        "Name": "Authorizer",
-        "ProviderARNs": [
-          {
-            "Fn::GetAtt": [
-              "CognitoUserPool",
-              "Arn"
-            ]
-          }
-        ]
+        "Domain": "service-user-pool-domain-dev-domainsuffixthatisunique"
       }
     }
   },
@@ -1222,7 +1123,7 @@
     },
     "RoverLambdaLayerS3Key": {
       "Description": "Current Lambda layer S3Key",
-      "Value": "serverless/feature-flag/dev/1639840615362-2021-12-18T15:16:55.362Z/rover.zip",
+      "Value": "serverless/feature-flag/dev/1639936626195-2021-12-19T17:57:06.195Z/rover.zip",
       "Export": {
         "Name": "sls-feature-flag-dev-RoverLambdaLayerS3Key"
       }
@@ -1230,7 +1131,7 @@
     "HelloLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "HelloLambdaVersiongr5pVx9weXPoQYjGS2QEa3uEVg1EUG6pH24nGMw"
+        "Ref": "HelloLambdaVersionQh28O4n9mX8D49jqRGKMUtJYk5qnaC1Lnhzqe6o4q0"
       },
       "Export": {
         "Name": "sls-feature-flag-dev-HelloLambdaFunctionQualifiedArn"
@@ -1239,7 +1140,7 @@
     "GatewayLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "GatewayLambdaVersionK3cfqjvTvR4yChz73HKZpjprd67aWVCwh7soIqU8cXk"
+        "Ref": "GatewayLambdaVersionS4m1AL5kwtJbc8dEx6YgqoTV4gZVnanVtQT6rMr6g"
       },
       "Export": {
         "Name": "sls-feature-flag-dev-GatewayLambdaFunctionQualifiedArn"
@@ -1248,7 +1149,7 @@
     "BuildSchemaLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "BuildSchemaLambdaVersionCSheBgbIg34QHUEbnX9H3BojsfWHNGRj7pM5ZkmaYY"
+        "Ref": "BuildSchemaLambdaVersionT9XPWLhejB5xhqr03sWBmau1diYZPKIimM06PCvfQ"
       },
       "Export": {
         "Name": "sls-feature-flag-dev-BuildSchemaLambdaFunctionQualifiedArn"
@@ -1280,14 +1181,38 @@
         "Name": "sls-feature-flag-dev-ServiceEndpoint"
       }
     },
-    "UserPoolId": {
+    "HttpApiId": {
+      "Description": "Id of the HTTP API",
       "Value": {
-        "Ref": "CognitoUserPool"
+        "Ref": "HttpApi"
+      },
+      "Export": {
+        "Name": "sls-feature-flag-dev-HttpApiId"
       }
     },
-    "UserPoolClientId": {
+    "HttpApiUrl": {
+      "Description": "URL of the HTTP API",
       "Value": {
-        "Ref": "CognitoUserPoolClient"
+        "Fn::Join": [
+          "",
+          [
+            "https://",
+            {
+              "Ref": "HttpApi"
+            },
+            ".execute-api.",
+            {
+              "Ref": "AWS::Region"
+            },
+            ".",
+            {
+              "Ref": "AWS::URLSuffix"
+            }
+          ]
+        ]
+      },
+      "Export": {
+        "Name": "sls-feature-flag-dev-HttpApiUrl"
       }
     }
   }

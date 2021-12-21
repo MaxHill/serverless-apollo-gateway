@@ -8,6 +8,24 @@ provider:
   profile: 'feature-flags'
   lambdaHashingVersion: "20201221"
   environment: ${file(env.yml):${self:custom.stage}}
+  apiGateway:
+    apiKeys:
+      - name: ${self:custom.stackName}-apiKey
+        value: ${self:provider.environment.API_KEY}
+
+  httpApi:
+    authorizers:
+      serviceAuthorizer:
+        identitySource: $request.header.Authorization
+        issuerUrl:
+          Fn::Join:
+          - ''
+          - - 'https://cognito-idp.'
+            - '${opt:region, self:provider.region}'
+            - '.amazonaws.com/'
+            - Ref: serviceUserPool
+        audience:
+          - Ref: serviceUserPoolClient
 
 plugins:
   - serverless-iam-roles-per-function
@@ -17,17 +35,22 @@ plugins:
 
 package:
   individually: true
+  patterns:
+    - "**/*.gql"
+    - "**/*.graphql"
 
 custom:
   stage: "${opt:stage, self:provider.stage}"
   stackName: "${self:service}-${self:custom.stage}"
-  #scripts:
-  #  hooks:
-  #    'deploy:finalize': sls invoke -f buildSchema -s ${self:custom.stage}
+  scripts:
+    hooks:
+      'deploy:finalize': sls invoke -f buildSchema -s ${self:custom.stage}
   esbuild:
     loader:
       .yml: text
       .yaml: text
+      .gql: text
+      .graphql: text
   s3Buckets:
     supergraph:
       name: ${self:service}-${self:custom.stage}-supergraph
@@ -36,32 +59,19 @@ custom:
             Fn::GetAtt: [supergraphBucket,Arn],
             '/*'
         ]]
-  userPool:
-    pool:
-      name: ${self:custom.stackName}-user-pool
-    client:
-      name: ${self:custom.userPool.pool.name}-client
 
 functions:
   gateway:
     handler: src/functions/gateway.handler
     events:
-      - http:
+      - httpApi:
           path: /graphql
-          method: post
-          authorizer:
-            type: COGNITO_USER_POOLS
-            authorizerId:
-              Ref: ApiGatewayAuthorizer
-          cors: true
-      - http:
+          method: POST
+          authorizer: serviceAuthorizer
+      - httpApi:
           path: /graphql
-          method: get
-          authorizer:
-            type: COGNITO_USER_POOLS
-            authorizerId:
-              Ref: ApiGatewayAuthorizer
-          cors: true
+          method: GET
+          authorizer: serviceAuthorizer
     iamRoleStatementsName: '${self:service}-role-gateway'
     iamRoleStatements:
       - Effect: 'Allow'
@@ -72,21 +82,13 @@ functions:
     handler: src/functions/hello.handler
     events:
       - http:
-          path: hello
-          method: post
-          authorizer:
-            type: COGNITO_USER_POOLS
-            authorizerId:
-              Ref: ApiGatewayAuthorizer
-          cors: true
+          path: /hello
+          method: POST
+          private: true
       - http:
-          path: hello
-          method: get
-          authorizer:
-            type: COGNITO_USER_POOLS
-            authorizerId:
-              Ref: ApiGatewayAuthorizer
-          cors: true
+          path: /hello
+          method: GET
+          private: true
 
   buildSchema:
     handler: src/functions/buildSchema.handler
@@ -94,18 +96,17 @@ functions:
       - { Ref: RoverLambdaLayer }
     events:
       - http:
-          path: build-schema
-          method: get
-          cors: true
-          authorizer:
-            type: COGNITO_USER_POOLS
-            authorizerId:
-              Ref: ApiGatewayAuthorizer
+          path: /build-schema
+          method: GET
+          private: true
     iamRoleStatementsName: '${self:service}-role-buildSchema'
     iamRoleStatements:
       - Effect: 'Allow'
         Action: s3:PutObject
         Resource: ${self:custom.s3Buckets.supergraph.arn}
+      - Effect: 'Allow'
+        Action: apigateway:GET
+        Resource: arn:aws:apigateway:eu-north-1::/apikeys/*
 
 layers:
   rover:
@@ -120,63 +121,45 @@ resources:
       Properties:
         BucketName: ${self:custom.s3Buckets.supergraph.name}
 
-    CognitoUserPool:
+    HttpApi:
+      DependsOn: serviceUserPool
+
+    serviceUserPool:
       Type: AWS::Cognito::UserPool
       Properties:
-        UserPoolName: ${self:custom.userPool.pool.name}
+        UserPoolName: service-user-pool-${opt:stage, self:provider.stage}
         UsernameAttributes:
           - email
         AutoVerifiedAttributes:
           - email
 
-    CognitoUserPoolClient:
+    serviceUserPoolClient:
       Type: AWS::Cognito::UserPoolClient
       Properties:
-        ClientName: ${self:custom.userPool.client.name}
-        UserPoolId:
-          Ref: CognitoUserPool
-        ExplicitAuthFlows:
-          - USER_PASSWORD_AUTH
-        GenerateSecret: false
-
-    CognitoMachinePoolClient:
-      Type: AWS::Cognito::UserPoolClient
-      Properties:
-        ClientName: ${self:custom.userPool.client.name}-machine
-        UserPoolId:
-          Ref: CognitoUserPool
+        ClientName: service-user-pool-client-${opt:stage, self:provider.stage}
         AllowedOAuthFlows:
-          - client_credentials
-        GenerateSecret: true
+          - implicit
+        AllowedOAuthFlowsUserPoolClient: true
+        AllowedOAuthScopes:
+          - phone
+          - email
+          - openid
+          - profile
+          - aws.cognito.signin.user.admin
+        UserPoolId:
+          Ref: serviceUserPool
+        CallbackURLs:
+          - https://localhost:3000
+        ExplicitAuthFlows:
+          - ALLOW_USER_PASSWORD_AUTH
+          - ALLOW_REFRESH_TOKEN_AUTH
+        GenerateSecret: false
+        SupportedIdentityProviders:
+          - COGNITO
 
-    CognitoUserPoolDomain:
-        Type: AWS::Cognito::UserPoolDomain
-        Properties:
-          UserPoolId: !Ref CognitoUserPool
-          Domain: "randomstringusedasdomain"
-
-    ApiGatewayAuthorizer:
-      DependsOn:
-        - ApiGatewayRestApi
-      Type: AWS::ApiGateway::Authorizer
+    serviceUserPoolDomain:
+      Type: AWS::Cognito::UserPoolDomain
       Properties:
-        AuthorizerResultTtlInSeconds: 300
-        IdentitySource: method.request.header.Authorization
-        RestApiId:
-          Ref: ApiGatewayRestApi
-        Type: COGNITO_USER_POOLS
-        Name: Authorizer
-        ProviderARNs:
-          - Fn::GetAtt:
-                - CognitoUserPool
-                - Arn
-
-  # Print out the Id of the Identity Pool that is created
-  Outputs:
-    UserPoolId:
-      Value:
-        Ref: CognitoUserPool
-
-    UserPoolClientId:
-      Value:
-        Ref: CognitoUserPoolClient
+        UserPoolId:
+          Ref: serviceUserPool
+        Domain: service-user-pool-domain-${opt:stage, self:provider.stage}-${self:provider.environment.DOMAIN_SUFFIX}

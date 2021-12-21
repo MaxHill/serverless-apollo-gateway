@@ -1,24 +1,39 @@
-import { ApolloGateway } from '@apollo/gateway';
+import { ApolloGateway, RemoteGraphQLDataSource } from '@apollo/gateway';
 import { ApolloServer } from 'apollo-server-lambda';
 import { S3 } from 'aws-sdk';
 import { s3 as getS3, env, replaceWithEnvVar, runCommand } from './utils';
 import { promises as Fs } from 'fs';
 
 /**
- * Create apollo server gateway handler
- * @param supergraphSdl
+ * Factory to create apolloGateway that adds api-key as header
+ * @param _RemoteGraphQLDataSource
  * @param apolloGateway
+ */
+export const gatewayFactory =
+  (_RemoteGraphQLDataSource = RemoteGraphQLDataSource, apolloGateway = ApolloGateway) =>
+  (supergraphSdl: string) =>
+    new apolloGateway({
+      supergraphSdl,
+      buildService: ({ url }) =>
+        new _RemoteGraphQLDataSource({
+          url,
+          willSendRequest: ({ request }) => request.http?.headers.set('x-api-key', env('API_KEY'))
+        })
+    });
+
+/**
+ * Create apollo server handler
+ * @param supergraphSdl
+ * @param createGateway
  * @param apolloServer
  */
 export const createApolloHandler = (
   supergraphSdl: string,
-  apolloGateway: typeof ApolloGateway = ApolloGateway,
+  createGateway = gatewayFactory(),
   apolloServer: typeof ApolloServer = ApolloServer
 ) => {
-  const gateway = new apolloGateway({ supergraphSdl });
-
   const server = new apolloServer({
-    gateway,
+    gateway: createGateway(supergraphSdl),
     context: ({ event, context }) => ({
       headers: event.headers,
       functionName: context.functionName,

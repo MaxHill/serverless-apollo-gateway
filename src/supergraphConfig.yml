@@ -2,4 +2,4 @@ subgraphs:
   hello:
     routing_url: "$API_URL$/hello"
     schema:
-      subgraph_url: "$API_URL$/hello"
+      file: "/var/task/src/functions/hello.graphql"
